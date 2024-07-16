@@ -4,12 +4,12 @@ namespace Ilias\Dotenv;
 
 use Ilias\Dotenv\Exceptions\EnvironmentNotFound;
 
-class Environments
+class Environment
 {
   private const ENV_FILE_PATH = '.env';
   public static array $vars = [];
 
-  public static function getEnvironments(): void
+  public static function setup(): void
   {
     $envFile = (!empty($_SERVER["DOCUMENT_ROOT"]) ? $_SERVER["DOCUMENT_ROOT"] : __DIR__) . DIRECTORY_SEPARATOR . self::ENV_FILE_PATH;
 
