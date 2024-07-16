@@ -10,7 +10,7 @@ class Environments
 
   public static function getEnvironments(): void
   {
-    $envFile = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . self::ENV_FILE_PATH;
+    $envFile = (!empty($_SERVER["DOCUMENT_ROOT"]) ? $_SERVER["DOCUMENT_ROOT"] : __DIR__) . DIRECTORY_SEPARATOR . self::ENV_FILE_PATH;
 
     try {
       $envContent = self::loadEnvFile($envFile);
