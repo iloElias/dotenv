@@ -1,6 +1,6 @@
 <?php
 
-namespace Ilias\Choir\Bootstrap;
+namespace Ilias\Dotenv;
 
 class Helper
 {

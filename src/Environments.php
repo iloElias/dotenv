@@ -1,7 +1,8 @@
 <?php
 
-namespace Ilias\Choir\Bootstrap;
-use Ilias\Exceptions\Exceptions\EnvironmentNotFound;
+namespace Ilias\Dotenv;
+
+use Ilias\Dotenv\Exceptions\EnvironmentNotFound;
 
 class Environments
 {

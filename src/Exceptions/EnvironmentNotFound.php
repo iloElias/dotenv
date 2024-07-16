@@ -1,5 +1,5 @@
 <?php
 
-namespace Ilias\Exceptions\Exceptions;
+namespace Ilias\Dotenv\Exceptions;
 
 class EnvironmentNotFound extends \Exception {}
