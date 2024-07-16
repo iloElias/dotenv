@@ -1,0 +1,25 @@
+{
+  "name": "ilias/dotenv",
+  "description": "A PHP dotenv reader",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Ilias\\Dotenv\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Murilo Elias",
+      "email": "murilo7456@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.0"
+  },
+  "minimum-stability": "dev"
+}
