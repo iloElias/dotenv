@@ -6,6 +6,7 @@ class Helper
 {
   public static function env($key, $default = '')
   {
-    return getenv($key) ?? $default;
+    $value = getenv($key);
+    return $value === false ? $default : $value;
   }
 }

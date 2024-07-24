@@ -9,12 +9,15 @@ class Environment
   private const ENV_FILE_PATH = '.env';
   public static array $vars = [];
 
-  public static function setup(): void
+  public static function setup(string $customPath = null): void
   {
-    $envFile = (!empty($_SERVER["DOCUMENT_ROOT"]) ? $_SERVER["DOCUMENT_ROOT"] : __DIR__) . DIRECTORY_SEPARATOR . self::ENV_FILE_PATH;
+    $envFile = $customPath ?? ((!empty($_SERVER["DOCUMENT_ROOT"]) ? $_SERVER["DOCUMENT_ROOT"] : __DIR__) . DIRECTORY_SEPARATOR . self::ENV_FILE_PATH);
 
     try {
       $envContent = self::loadEnvFile($envFile);
+      if ($envContent === null) {
+        throw new \Exception("Environment file not found");
+      }
     } catch (\Throwable $th) {
       throw new EnvironmentNotFound();
     }
@@ -23,14 +26,14 @@ class Environment
     self::processEnvLines($envLines);
   }
 
-  private static function loadEnvFile(string $envFile)
+  public static function loadEnvFile(string $envFile)
   {
     if (file_exists($envFile)) {
       return file_get_contents($envFile) ?? null;
     }
   }
 
-  private static function processEnvLines(array $envLines): void
+  public static function processEnvLines(array $envLines): void
   {
     foreach ($envLines as $envLine) {
       if (self::isValidEnvLine($envLine)) {
@@ -42,18 +45,18 @@ class Environment
     }
   }
 
-  private static function isValidEnvLine(string $envLine): bool
+  public static function isValidEnvLine(string $envLine): bool
   {
     return $envLine !== '' && $envLine !== '0' && strpos($envLine, '#') !== 0;
   }
 
-  private static function parseEnvLine(string $envLine): array
+  public static function parseEnvLine(string $envLine): array
   {
     [$name, $value] = explode('=', $envLine, 2);
     return [trim($name), trim(str_replace('"', '', $value))];
   }
 
-  private static function normalizeEnvValue(string $value)
+  public static function normalizeEnvValue(string $value)
   {
     switch (strtolower($value)) {
       case 'true':
@@ -73,7 +76,7 @@ class Environment
     }
   }
 
-  private static function setEnvironmentVariable(string $name, $value): void
+  public static function setEnvironmentVariable(string $name, $value): void
   {
     putenv(sprintf('%s=%s', $name, $value));
     self::$vars[$name] = $value;
