@@ -1,5 +1,6 @@
 {
   "name": "ilias/dotenv",
+  "version": "1.0.0",
   "description": "A PHP dotenv reader",
   "type": "project",
   "autoload": {
