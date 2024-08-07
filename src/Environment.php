@@ -7,20 +7,24 @@ use Ilias\Dotenv\Exceptions\EnvironmentNotFound;
 class Environment
 {
   private const ENV_FILE_PATH = '.env';
+  public static bool $initialized = false;
   public static array $vars = [];
 
   public static function setup(): void
   {
-    $envFile = (!empty($_SERVER["DOCUMENT_ROOT"]) ? $_SERVER["DOCUMENT_ROOT"] : __DIR__) . DIRECTORY_SEPARATOR . self::ENV_FILE_PATH;
-
-    try {
-      $envContent = self::loadEnvFile($envFile);
-    } catch (\Throwable $th) {
-      throw new EnvironmentNotFound();
-    }
-
-    $envLines = explode("\n", $envContent);
-    self::processEnvLines($envLines);
+    if (self::$initialized === false) {
+      $envFile = (!empty($_SERVER["DOCUMENT_ROOT"]) ? $_SERVER["DOCUMENT_ROOT"] : __DIR__) . DIRECTORY_SEPARATOR . self::ENV_FILE_PATH;
+  
+      try {
+        $envContent = self::loadEnvFile($envFile);
+      } catch (\Throwable $th) {
+        throw new EnvironmentNotFound();
+      }
+  
+      $envLines = explode("\n", $envContent);
+      self::processEnvLines($envLines);
+      self::$initialized = true;
+    } 
   }
 
   private static function loadEnvFile(string $envFile)
