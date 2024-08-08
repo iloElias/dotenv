@@ -2,7 +2,7 @@
   "name": "ilias/dotenv",
   "description": "A PHP dotenv reader",
   "type": "project",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "autoload": {
     "psr-4": {
       "Ilias\\Dotenv\\": "src/"
