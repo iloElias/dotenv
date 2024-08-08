@@ -6,32 +6,36 @@ use Ilias\Dotenv\Exceptions\EnvironmentNotFound;
 
 class Environment
 {
-  private const ENV_FILE_PATH = '.env';
+  private static string $envPathFile = '.env';
   public static bool $initialized = false;
   public static array $vars = [];
 
-  public static function setup(): void
+  public static function setup(string $customEnvPathFile = null): void
   {
     if (self::$initialized === false) {
-      $envFile = (!empty($_SERVER["DOCUMENT_ROOT"]) ? $_SERVER["DOCUMENT_ROOT"] : __DIR__) . DIRECTORY_SEPARATOR . self::ENV_FILE_PATH;
-  
+      $envFile = $customEnvPathFile ?? self::$envPathFile;
+
       try {
         $envContent = self::loadEnvFile($envFile);
+        if ($envContent === null) {
+          throw new EnvironmentNotFound();
+        }
       } catch (\Throwable $th) {
         throw new EnvironmentNotFound();
       }
-  
+
       $envLines = explode("\n", $envContent);
       self::processEnvLines($envLines);
       self::$initialized = true;
-    } 
+    }
   }
 
   private static function loadEnvFile(string $envFile)
   {
     if (file_exists($envFile)) {
-      return file_get_contents($envFile) ?? null;
+      return file_get_contents($envFile) ?: null;
     }
+    return null;
   }
 
   private static function processEnvLines(array $envLines): void
@@ -62,10 +66,10 @@ class Environment
     switch (strtolower($value)) {
       case 'true':
       case '(true)':
-        return true;
+        return 'true';
       case 'false':
       case '(false)':
-        return false;
+        return 'false';
       case 'empty':
       case '(empty)':
         return '';
