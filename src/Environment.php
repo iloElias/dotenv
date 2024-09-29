@@ -6,21 +6,20 @@ use Ilias\Dotenv\Exceptions\EnvironmentNotFound;
 
 class Environment
 {
+  public const THROW_EXCEPTION = 1;
+  public const SUPPRESS_EXCEPTION = 2;
+
   private static string $envPathFile = '.env';
   public static bool $initialized = false;
   public static array $vars = [];
 
-  public static function setup(string $customEnvPathFile = null): void
+  public static function setup(string $customEnvPathFile = null, int $exceptionHandle = Environment::THROW_EXCEPTION): void
   {
     if (self::$initialized === false) {
       $envFile = $customEnvPathFile ?? self::$envPathFile;
 
-      try {
-        $envContent = self::loadEnvFile($envFile);
-        if ($envContent === null) {
-          throw new EnvironmentNotFound();
-        }
-      } catch (\Throwable $th) {
+      $envContent = self::loadEnvFile($envFile);
+      if ($envContent === null && $exceptionHandle === Environment::THROW_EXCEPTION) {
         throw new EnvironmentNotFound();
       }
 
