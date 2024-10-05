@@ -51,33 +51,39 @@ class Environment
 
   private static function isValidEnvLine(string $envLine): bool
   {
-    return $envLine !== '' && $envLine !== '0' && strpos($envLine, '#') !== 0;
+    return $envLine !== '' && $envLine !== '0' && !empty(trim(explode('#', $envLine)[0])) && strpos($envLine, '#') !== 0;
   }
 
   private static function parseEnvLine(string $envLine): array
   {
-    [$name, $value] = explode('=', $envLine, 2);
+    [$name, $value] = explode('=', explode('#', $envLine)[0], 2);
     return [trim($name), trim(str_replace('"', '', $value))];
   }
 
   private static function normalizeEnvValue(string $value)
   {
-    switch (strtolower($value)) {
-      case 'true':
-      case '(true)':
-        return 'true';
-      case 'false':
-      case '(false)':
-        return 'false';
-      case 'empty':
-      case '(empty)':
-        return '';
-      case 'null':
-      case '(null)':
-        return null;
-      default:
-        return $value;
+    $lowerValue = strtolower($value);
+    if (strpos($value, '#') !== false) {
+      $value = substr($value, 0, strpos($value, '#'));
     }
+
+    if (in_array($lowerValue, ['true', '(true)'], true)) {
+      return 'true';
+    }
+
+    if (in_array($lowerValue, ['false', '(false)'], true)) {
+      return 'false';
+    }
+
+    if (in_array($lowerValue, ['empty', '(empty)'], true)) {
+      return '';
+    }
+
+    if (in_array($lowerValue, ['null', '(null)'], true)) {
+      return null;
+    }
+
+    return trim($value);
   }
 
   private static function setEnvironmentVariable(string $name, $value): void

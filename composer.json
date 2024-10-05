@@ -2,11 +2,14 @@
   "name": "ilias/dotenv",
   "description": "A PHP dotenv reader",
   "type": "project",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "autoload": {
     "psr-4": {
       "Ilias\\Dotenv\\": "src/"
     }
+  },
+  "scripts": {
+    "phpunit": "vendor/bin/phpunit tests --colors=always"
   },
   "autoload-dev": {
     "psr-4": {

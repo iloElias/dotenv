@@ -92,4 +92,41 @@ class EnvironmentTest extends TestCase
     $this->assertFalse($isValidMethod->invoke(null, '# This is a comment'));
     $this->assertFalse($isValidMethod->invoke(null, ''));
   }
+
+  public function testSetupIgnoresCommentedLines()
+  {
+    $envContent = "APP_ENV=testing\n#APP_COMMENT=test\nAPP_KEY=secret";
+    file_put_contents($this->envFile, $envContent);
+
+    Environment::setup($this->envFile);
+
+    $this->assertTrue(Environment::$initialized);
+    $this->assertEquals('testing', getenv('APP_ENV'));
+    $this->assertFalse(getenv('APP_COMMENT'));
+    $this->assertEquals('secret', getenv('APP_KEY'));
+  }
+
+  public function testSetupHandlesInlineComments()
+  {
+    $envContent = "APP_ENV=testing # This is a comment\nAPP_DEBUG=true # Another comment";
+    file_put_contents($this->envFile, $envContent);
+
+    Environment::setup($this->envFile);
+
+    $this->assertTrue(Environment::$initialized);
+    $this->assertEquals('testing', getenv('APP_ENV'));
+    $this->assertEquals('true', getenv('APP_DEBUG'));
+  }
+
+  public function testSetupHandlesEmptyLines()
+  {
+    $envContent = "APP_ENV=testing\n\nAPP_DEBUG=true";
+    file_put_contents($this->envFile, $envContent);
+
+    Environment::setup($this->envFile);
+
+    $this->assertTrue(Environment::$initialized);
+    $this->assertEquals('testing', getenv('APP_ENV'));
+    $this->assertEquals('true', getenv('APP_DEBUG'));
+  }
 }
